@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html/">
+<title>Factura ONLINE </title>
+<script type="text/JavaScript" src="matematicas.js"></script>
+
+<style>
+.empresa,.cliente{
+	border:1px solid black;
+	width:45%
+	height:auto;
+	float:left;
+	}
+.conceptos,.resultados
+{
+	border:1px solid black;
+	width:90%;
+	height:auto;
+	clear:left;
+}
+@media print{
+	.resultados{
+		display:block;
+		page-break-inside:avoid;/* evitamos rotura del div resultado*/
+	}
+	button/* ocultamos botones*/{
+		visibility:hidden;
+	}
+	#TablaConceptos td:nth-child(6)
+	{
+		visibility:hidden;
+
+	}
+	#TablaConceptos{
+		border-width:0px;
+	}
+
+}
+</style>
+ 
+<script>
+grabada=1;
+num_conceptos.value=0;
+function EliminarProducto(r){
+	if(grabada==1){
+		var i=r.parentNode.parentNode.rowIndex;
+		mitabla.deleteRow(i);
+		num_conceptos.value--;
+		
+	}
+}
+function Insertar2(r){
+if(grabada==1){
+		mitabla=document.getElementById("TablaConceptos");
+		var i=r.parentNode.parentNode.rowIndex;
+		filan=mitabla.insertRow(i+1);
+		c0=filan.insertCell(0);
+		c1=filan.insertCell(1);
+		c2=filan.insertCell(2);
+		c3=filan.insertCell(3);
+		c4=filan.insertCell(4);
+		c5=filan.insertCell(5);
+		
+		c0.innerHTML="<input id='codigo2' value='1'>";
+		c1.innerHTML="<input id='concepto2' value='uvas'>";
+		c2.innerHTML="<input id='precio2' value='1'>";
+		c3.innerHTML="<input id='cantidad2' value='1'>";
+		c5.innerHTML="<button onclick='EliminarProducto(this)'>-</button>";
+		c5.innerHTML=c5.innerHTML+"<button onclick='Insertar2(this)'>+</button>";
+		c5.innerHTML=c5.innerHTML+"<button onclick='Grabar(this)'>Grabar</button>";
+		grabada=0;
+		if (num_conceptos.value==4)
+		{
+		mitabla=document.getElementById("TablaConceptos");
+		var i=r.parentNode.parentNode.rowIndex;
+		filan=mitabla.insertRow(i+1);
+		c0=filan.insertCell(0);
+		c1=filan.insertCell(1);
+		c2=filan.insertCell(2);
+		c3=filan.insertCell(3);
+		c4=filan.insertCell(4);
+		c5=filan.insertCell(5);
+		
+		c0.innerHTML="<strong>Código</strong>";
+		c1.innerHTML="<strong>Concepto</strong>";
+		c2.innerHTML="<strong>Precio</strong>";
+		c3.innerHTML="<strong>Unidades</strong>";
+		c4.innerHTML="<strong>Subtotal</strong>";
+		c5.innerHTML="";
+		}
+		
+	}
+
+	
+}
+    function Grabar(r){
+		if(grabada==0){
+			if((precio2.value=="")||(cantidad2.value=="")||NosoloNumeros(precio2.value)||NosoloNumeros(cantidad2.value)){
+				alert("Error en precio y/o cantidad de línea actual");
+				grabada=0;
+			}else{
+    			r.parentNode.parentNode.firstChild.innerHTML=codigo2.value;
+				r.parentNode.parentNode.firstChild.nextSibling.innerHTML=concepto2.value;
+				a=r.parentNode.parentNode.firstChild.nextSibling.nextSibling.innerHTML=precio2.value;
+				b=r.parentNode.parentNode.firstChild.nextSibling.nextSibling.nextSibling.innerHTML=cantidad2.value;
+				r.parentNode.parentNode.firstChild.nextSibling.nextSibling.nextSibling.nextSibling.innerHTML=(parseFloat(a)*parseFloat(b)).toLocaleString('sp-SP',{style:'currency',currency:'EUR'});
+				grabada=1;
+				num_conceptos.value++;
+			}
+		}
+	}
+	 	var f = new Date(); //En f quiero una nueva fecha, si no le pones nada ()te coje la del sistema
+		var meses = new Array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");//Declaro un Array para los meses
+		
+	 	fecha.value=(f.getDate() + " de " + (meses[f.getMonth()]) + " de " + f.getFullYear()); //Se mete en la casilla fecha se llama a la variable meses que es un array recorrido por f.getMonth() y muestra la posicion en el array meses declarado anteriormente
+	 	
+	 </script>
+</head>
+ 
+<body>
+
+<div>
+	<h1>FACTURACIÓN ONLINE</h1>
+	<div class="empresa">
+   <!--  ############################################DATOS EMPRESA################################################# -->
+    <form action="#" method="post" name="Emisor">
+		<h2>Empresa:</h2>
+      	<input id="Nombre" name="Nombre" type="text" value="Multiformación S.A." size="20" disabled><br>
+   	  	<input id="Direccion" name="Direccion" type="text" value="Calle Polo de Medina, 21 (Murcia)" size="25" maxlength="60" disabled><br>
+      	<input id="CP" name="CP" type="text" value="30001" size="5" disabled><br>
+      	<input id="DNI" name="DNI" type="text" value="11111111" size="8" disabled>
+        <input id="Letra" name="Letra" type="text" value="X" size="1" disabled>
+    <!-- ########################################################################################################### -->
+        
+        <br><br>
+        Número Factura: <input id="nfactura" name="nfactura" type="text" size="4"><br><br>
+       	Fecha Factura: <input id="fecha" name="fecha" type="text"><br><br>
+       	Número de Conceptos:<input id="num_conceptos" name="num_conceptos" type="text"><br><br>
+    </form>
+</div>
+        
+    <!--  ###############################################DATOS CLIENTES################################################ -->
+    <div class="cliente">
+	   <h2>Cliente:</h2>
+	   <form action="" method="post" name="cliente">
+        <table width="60%" border="0">
+          <tr>
+            <td width="29%">Nombre: </td>
+            <td width="71%"><input id="Nombre_C" name="Nombre_C" type="text"  size="20"></td>
+          </tr>
+          <tr>
+            <td>Dirección:</td>
+            <td><input id="Direccion_C" name="Direccion_C" type="text"  size="60"></td>
+          </tr>
+          <tr>
+            <td>C.P.</td>
+            <td><input id="CP_C" name="CP_C" type="text"  size="5"></td>
+          </tr>
+          <tr>
+            <td>NIF</td>
+            <td><input id="DNI_C" name="DNI_C" type="text"  size="8">
+            -<input id="Letra_C" name="Letra_C" type="text" size="1" onFocus="letraDNI();"></td>
+          </tr>
+        </table>
+	 </form>
+	 	<br>
+	 </div>
+	 <!-- #################################################FIN DATOS CLIENTES################################################# -->
+	<!--  #################################################TABLA CONCEPTOS#################################################### -->
+	 <div class="conceptos">
+		<table id="TablaConceptos" width="80%" height="100px" border="1">
+    		<tr>
+    			<th>Código</th>
+    			<th>Concepto</th>
+    			<th>Precio</th>
+    			<th>Cantidad</th>
+           	 	<th>Subtotal <button onclick='Insertar2(this)'>+</button></th>
+                
+         	</tr>
+           
+    	</table>
+	</div>
+	<!-- #####################################################FIN TABLA CONCEPTOS############################################# -->
+	<!-- ###############################################RESULTADOS#################################################### -->
+    <div class="resultados">
+      <input type="button" name="btn" id="btn" value="Calcular" onclick="RecorrerTabla();" style="cursor:pointer">
+      Subtotal:<input id="subtotal" name="subtotal" type="text" disabled>
+      Dto %:<input id="dto" name="dto" type="text" value="5" size="2" maxlength="2">
+      Dto €:<input id="valordto" name="valordto" type="text" size="6" disabled><br>
+      Neto:<input id="neto" name="neto" type="text" disabled>
+      iva %:<input id="tipo" name="tipo" type="text" value="21" size="2" maxlength="2">
+      Iva:<input id="valoriva" name="valoriva" type="text" disabled>
+      Total:<input id="total" name="total" type="text" disabled>
+    </div>
+   <!--  ###################################################FIN RESULTADOS############################################### -->
+</body>
+</html>
